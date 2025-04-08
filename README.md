@@ -32,26 +32,36 @@
       box-sizing: border-box;
     }
     .receipt {
-      background: white;
+      background: #1e293b;
+      color: #f8fafc;
       padding: 1.5rem;
-      border: 1px dashed #aaa;
-      font-family: monospace;
+      border: 1px solid #334155;
+      border-radius: 1rem;
+      font-family: 'Courier New', monospace;
       width: 100%;
       max-width: 380px;
       margin-top: 1rem;
       display: none;
       text-align: center;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
     }
     .receipt h3 {
       margin-bottom: 1rem;
+      font-size: 1.2rem;
+      color: #38bdf8;
+      letter-spacing: 1px;
     }
     .receipt img.logo {
-      max-width: 80px;
+      max-width: 100px;
       margin-bottom: 1rem;
     }
     .receipt img.qr {
       max-width: 100px;
       margin-top: 1rem;
+    }
+    .receipt p {
+      margin: 0.4rem 0;
+      font-size: 0.9rem;
     }
   </style>
 </head>
@@ -67,8 +77,8 @@
     <button onclick="sendAlert()">Send Alert</button>
 
     <div class="receipt" id="receipt">
-      <img src="https://via.placeholder.com/80x40.png?text=Bank+Logo" alt="Bank Logo" class="logo" />
-      <h3>Bank Payment Receipt</h3>
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Polaris_Bank_logo.svg/512px-Polaris_Bank_logo.svg.png" alt="Polaris Bank Logo" class="logo" />
+      <h3>POLARIS BANK LIMITED</h3>
       <p><strong>Amount:</strong> ₦<span id="amountDisplay"></span></p>
       <p><strong>To:</strong> <span id="accountNameDisplay"></span> (<span id="accountDisplay"></span>)</p>
       <p><strong>Bank:</strong> <span id="bankDisplay"></span></p>
