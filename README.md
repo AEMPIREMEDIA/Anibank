@@ -51,53 +51,39 @@
 <body>
   <div class="container">
     <h2>Send Payment Alert</h2>
+    <input type="text" id="senderName" placeholder="Enter Sender's Name">
     <input type="text" id="bankName" placeholder="Enter Bank Name">
     <input type="text" id="accountNumber" placeholder="Enter Nigerian Account Number" maxlength="10">
-    <button onclick="fetchAccountName()">Get Account Name</button>
-    <input type="text" id="accountName" placeholder="Account Name" readonly>
+    <input type="text" id="accountName" placeholder="Enter Beneficiary Account Name">
     <input type="number" id="amount" placeholder="Enter Amount (₦)">
     <textarea id="description" placeholder="Enter Transfer Description"></textarea>
     <button onclick="sendAlert()">Send Alert</button>
     <div class="alert" id="alertBox">
-      Payment alert of ₦<span id="amountDisplay"></span> sent to <span id="accountNameDisplay"></span> (<span id="accountDisplay"></span>) at <span id="bankDisplay"></span>. <br>
-      Description: <span id="descDisplay"></span>
+      Payment alert of ₦<span id="amountDisplay"></span> sent to <span id="accountNameDisplay"></span> 
+      (<span id="accountDisplay"></span>) at <span id="bankDisplay"></span> by <span id="senderNameDisplay"></span> on 
+      <span id="dateTimeDisplay"></span>. <br>
+      Description: <span id="descDisplay"></span><br>
+      The beneficiary will receive the fund within 24 banking hours.
     </div>
+    <button onclick="downloadReceipt()" style="display: none;" id="downloadBtn">Download Receipt</button>
   </div>
 
   <script>
-    function fetchAccountName() {
-      const bank = document.getElementById('bankName').value.trim();
-      const account = document.getElementById('accountNumber').value.trim();
-      const accountNameInput = document.getElementById('accountName');
-
-      if (!bank) {
-        alert("Please enter the bank name.");
-        return;
-      }
-
-      if (account.length !== 10 || isNaN(account)) {
-        alert('Please enter a valid 10-digit Nigerian account number.');
-        return;
-      }
-
-      // Simulate account name lookup
-      accountNameInput.value = 'Fetching...';
-
-      setTimeout(() => {
-        // Mocked account name for demonstration
-        accountNameInput.value = "John Doe";
-      }, 1000);
-    }
-
     function sendAlert() {
+      const sender = document.getElementById('senderName').value.trim();
       const bank = document.getElementById('bankName').value.trim();
       const account = document.getElementById('accountNumber').value.trim();
       const accountName = document.getElementById('accountName').value.trim();
       const amount = document.getElementById('amount').value.trim();
       const description = document.getElementById('description').value.trim();
 
-      if (!bank || !account || !accountName) {
-        alert('Please ensure all account details are filled and account name is fetched.');
+      if (!sender || !bank || !account || !accountName) {
+        alert('Please fill in all required fields.');
+        return;
+      }
+
+      if (account.length !== 10 || isNaN(account)) {
+        alert('Please enter a valid 10-digit account number.');
         return;
       }
 
@@ -106,13 +92,28 @@
         return;
       }
 
+      const now = new Date();
+      const dateTime = now.toLocaleString();
+
+      document.getElementById('senderNameDisplay').textContent = sender;
       document.getElementById('bankDisplay').textContent = bank;
       document.getElementById('accountDisplay').textContent = account;
       document.getElementById('accountNameDisplay').textContent = accountName;
       document.getElementById('amountDisplay').textContent = parseFloat(amount).toLocaleString();
       document.getElementById('descDisplay').textContent = description || "N/A";
+      document.getElementById('dateTimeDisplay').textContent = dateTime;
 
       document.getElementById('alertBox').style.display = 'block';
+      document.getElementById('downloadBtn').style.display = 'inline-block';
+    }
+
+    function downloadReceipt() {
+      const text = document.getElementById('alertBox').innerText;
+      const blob = new Blob([text], { type: 'text/plain' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'payment-receipt.txt';
+      link.click();
     }
   </script>
 </body>
