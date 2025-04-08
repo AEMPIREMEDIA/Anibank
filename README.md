@@ -3,117 +3,105 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Mock Payment Gateway</title>
+  <title>Polaris Transaction Receipt</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       background-color: #f3f4f6;
       display: flex;
-      flex-direction: column;
-      align-items: center;
       justify-content: center;
-      height: 100vh;
+      align-items: center;
+      min-height: 100vh;
       margin: 0;
     }
-    .container {
-      background: white;
-      padding: 2rem;
-      border-radius: 1rem;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      max-width: 400px;
-      width: 100%;
-    }
-    input, button, select, textarea {
-      width: 100%;
-      padding: 1rem;
-      margin: 0.5rem 0;
-      border-radius: 0.5rem;
-      border: 1px solid #ccc;
-      box-sizing: border-box;
-    }
-    .alert {
-      display: none;
-      padding: 1rem;
-      background-color: #d1fae5;
-      color: #065f46;
-      border: 1px solid #10b981;
-      border-radius: 0.5rem;
-      margin-top: 1rem;
+    .receipt {
+      background: #fff;
+      width: 90%;
+      max-width: 500px;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
       text-align: center;
-      animation: flash 0.5s alternate infinite;
     }
-    @keyframes flash {
-      0% { opacity: 1; }
-      100% { opacity: 0.4; }
+    .receipt h2 {
+      margin-top: 0;
+    }
+    .amount {
+      color: #00c28b;
+      font-size: 28px;
+      font-weight: bold;
+    }
+    .approved {
+      color: #00c28b;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    .info {
+      text-align: left;
+      margin-top: 20px;
+    }
+    .info div {
+      margin: 10px 0;
+    }
+    .label {
+      font-weight: bold;
+    }
+    .support {
+      margin-top: 30px;
+      font-size: 14px;
+      color: #666;
+    }
+    .support a {
+      color: #00c28b;
+      text-decoration: none;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #00c28b;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>Send Payment Alert</h2>
-    <input type="text" id="senderName" placeholder="Enter Sender's Name">
-    <input type="text" id="bankName" placeholder="Enter Bank Name">
-    <input type="text" id="accountNumber" placeholder="Enter Nigerian Account Number" maxlength="10">
-    <input type="text" id="accountName" placeholder="Enter Beneficiary Account Name">
-    <input type="number" id="amount" placeholder="Enter Amount (₦)">
-    <textarea id="description" placeholder="Enter Transfer Description"></textarea>
-    <button onclick="sendAlert()">Send Alert</button>
-    <div class="alert" id="alertBox">
-      Payment alert of ₦<span id="amountDisplay"></span> sent to <span id="accountNameDisplay"></span> 
-      (<span id="accountDisplay"></span>) at <span id="bankDisplay"></span> by <span id="senderNameDisplay"></span> on 
-      <span id="dateTimeDisplay"></span>. <br>
-      Description: <span id="descDisplay"></span><br>
-      The beneficiary will receive the fund within 24 banking hours.
+  <div class="receipt" id="receiptContent">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/OPay_logo.svg/512px-OPay_logo.svg.png" alt="Opay Logo" width="80" />
+    <h2>Transaction info</h2>
+    <div class="amount">NGN 2000.00</div>
+    <div class="approved">APPROVED</div>
+    <div>06/04/25 14:32:16</div>
+
+    <div class="info">
+      <div><span class="label">Transaction Type:</span> Transfer to OPay</div>
+      <div><span class="label">Sender:</span> OWUMI BOB MAYOMI</div>
+      <div><span class="label">Sender Account:</span> 905 011 0150</div>
+      <div><span class="label">Recipient:</span> ANIEFIOK BASSEY ETIM</div>
+      <div><span class="label">Recipient Account:</span> 912 776 8874</div>
+      <div><span class="label">Remark:</span> FOR DATA</div>
+      <div><span class="label">Transaction NO.:</span> 250406010100063646464641</div>
     </div>
-    <button onclick="downloadReceipt()" style="display: none;" id="downloadBtn">Download Receipt</button>
+
+    <div class="support">
+      SUPPORT<br />
+      <a href="mailto:pos-service@opay-inc.com">pos-service@opay-inc.com</a><br />
+      07008888329
+    </div>
+
+    <button onclick="downloadReceipt()">Download Receipt</button>
   </div>
 
   <script>
-    function sendAlert() {
-      const sender = document.getElementById('senderName').value.trim();
-      const bank = document.getElementById('bankName').value.trim();
-      const account = document.getElementById('accountNumber').value.trim();
-      const accountName = document.getElementById('accountName').value.trim();
-      const amount = document.getElementById('amount').value.trim();
-      const description = document.getElementById('description').value.trim();
-
-      if (!sender || !bank || !account || !accountName) {
-        alert('Please fill in all required fields.');
-        return;
-      }
-
-      if (account.length !== 10 || isNaN(account)) {
-        alert('Please enter a valid 10-digit account number.');
-        return;
-      }
-
-      if (!amount || isNaN(amount) || amount <= 0) {
-        alert('Please enter a valid amount.');
-        return;
-      }
-
-      const now = new Date();
-      const dateTime = now.toLocaleString();
-
-      document.getElementById('senderNameDisplay').textContent = sender;
-      document.getElementById('bankDisplay').textContent = bank;
-      document.getElementById('accountDisplay').textContent = account;
-      document.getElementById('accountNameDisplay').textContent = accountName;
-      document.getElementById('amountDisplay').textContent = parseFloat(amount).toLocaleString();
-      document.getElementById('descDisplay').textContent = description || "N/A";
-      document.getElementById('dateTimeDisplay').textContent = dateTime;
-
-      document.getElementById('alertBox').style.display = 'block';
-      document.getElementById('downloadBtn').style.display = 'inline-block';
-    }
-
     function downloadReceipt() {
-      const text = document.getElementById('alertBox').innerText;
-      const blob = new Blob([text], { type: 'text/plain' });
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = 'payment-receipt.txt';
-      link.click();
+      const element = document.createElement('a');
+      const content = document.getElementById('receiptContent').innerText;
+      const file = new Blob([content], { type: 'text/plain' });
+      element.href = URL.createObjectURL(file);
+      element.download = "opay-receipt.txt";
+      document.body.appendChild(element);
+      element.click();
     }
   </script>
 </body>
